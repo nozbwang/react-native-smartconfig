@@ -1,18 +1,18 @@
 
 ## 升级RN后，使用react-native-smartconfig遇到了很多问题，所以决定fork进行修改
 
-1. No interface method pushMap(Lcom/facebook/react/bridge/WritableMap;)V in class Lcom/facebook/react/bridge/WritableArray; or its super classes (declaration of 'com.fa
+### 1. No interface method pushMap(Lcom/facebook/react/bridge/WritableMap;)V in class Lcom/facebook/react/bridge/WritableArray; or its super classes (declaration of 'com.fa
 cebook.react.bridge.WritableArray' appears in /data/app/com.example-K7SKRFpCkWFuGIH_USeqlA==/base.apk)","type":"nativelo
 g"}
 
 因为高版本的RN修改了WritableArray的接口。
 导致RCTSmartconfigModule.start()方法中WritableArray.pushMap(WritableMap)报错。
 
-2. 多次调用Smartconfig.start方法后，APP闪退。 
+### 2. 多次调用Smartconfig.start方法后，APP闪退。 
 
 因为__EsptouchTask.__listenAsyn方法会启动一个线程，线程里的方法会报错，导致闪退。给线程里的方法加上异常保护就可以了。
 
-3. 本地调试RN插件，看不到日志。
+### 3. 本地调试RN插件，看不到日志。
 
 因为我是直接使用命令行启动的RN应用，IDE使用的是ATOM，所以看不到logcat的日志。所以直接采用Android原生代码向JS发送消息，在JS模块中进行日志打印。
 
