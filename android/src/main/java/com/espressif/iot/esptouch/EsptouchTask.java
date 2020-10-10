@@ -1,12 +1,14 @@
 package com.espressif.iot.esptouch;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import android.content.Context;
 
 import com.espressif.iot.esptouch.task.EsptouchTaskParameter;
 import com.espressif.iot.esptouch.task.IEsptouchTaskParameter;
 import com.espressif.iot.esptouch.task.__EsptouchTask;
+import com.tuanpm.RCTSmartconfig.ThiefUtil;
 
 public class EsptouchTask implements IEsptouchTask {
 
