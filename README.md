@@ -26,7 +26,7 @@ yarn && yarn android
 2.如果你正在尝试修改react-native-smartconfig-esp的内容，可以在example目录下使用以下命令使其实时生效
 
 ```bash
-rm -rf node_modules\react-native-smartconfig-esp\ && yarn --force && yarn android
+rm -rf node_modules\react-native-smartconfig-esp8266\ && yarn --force && yarn android
 ```
 
 ## Description
