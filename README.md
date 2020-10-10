@@ -15,6 +15,20 @@
 因为我是直接使用命令行启动的RN应用，IDE使用的是ATOM，所以看不到logcat的日志。所以直接采用Android原生代码向JS发送消息，在JS模块中进行日志打印。
 
 
+## 添加了example
+
+1.运行 (需首先切换当前目录为example目录)： 
+
+```bash
+yarn && yarn android
+```
+
+2.如果你正在尝试修改react-native-smartconfig-esp的内容，可以在example目录下使用以下命令使其实时生效
+
+```bash
+rm -rf node_modules\react-native-smartconfig-esp\ && yarn --force && yarn android
+```
+
 ## Description
 
 [react-native](https://github.com/facebook/react-native) module for [ESP8266 ESPTOUCH Smart config](https://github.com/EspressifApp)
