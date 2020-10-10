@@ -1,12 +1,12 @@
 {
-  "name": "react-native-smartconfig",
+  "name": "react-native-smartconfig-esp",
   "version": "0.2.2",
   "description": "react-native ESP8266 smartconfig module",
   "nativePackage": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "<Tuan PM> tuanpm@live.com",
+  "author": "<nozbwang> melody1926@126.com",
   "license": "MIT",
   "keywords": [
     "react-native",

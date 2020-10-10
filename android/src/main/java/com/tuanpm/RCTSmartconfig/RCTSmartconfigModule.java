@@ -29,19 +29,19 @@ import com.espressif.iot.esptouch.IEsptouchListener;
 import com.espressif.iot.esptouch.IEsptouchResult;
 import com.espressif.iot.esptouch.IEsptouchTask;
 import com.espressif.iot.esptouch.task.__IEsptouchTask;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.tuanpm.RCTSmartconfig.ThiefUtil;
 
 public class RCTSmartconfigModule extends ReactContextBaseJavaModule {
 
     private static final String TAG = "RCTSmartconfigModule";
-
     private final ReactApplicationContext _reactContext;
-
     private IEsptouchTask mEsptouchTask;
 
     public RCTSmartconfigModule(ReactApplicationContext reactContext) {
         super(reactContext);
         _reactContext = reactContext;
-
+        ThiefUtil._reactContext= reactContext;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class RCTSmartconfigModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void stop() {
       if (mEsptouchTask != null) {
-        Log.d(TAG, "cancel task");
+        ThiefUtil.sendEvent(TAG, "cancel task");
         mEsptouchTask.interrupt();
       }
     }
@@ -63,43 +63,42 @@ public class RCTSmartconfigModule extends ReactContextBaseJavaModule {
       String pass = options.getString("password");
       Boolean hidden = false;
       //Int taskResultCountStr = 1;
-      Log.d(TAG, "ssid " + ssid + ":pass " + pass);
+      ThiefUtil.sendEvent(TAG, "ssid " + ssid + ":pass " + pass);
+    try{
       stop();
       new EsptouchAsyncTask(new TaskListener() {
         @Override
         public void onFinished(List<IEsptouchResult> result) {
             // Do Something after the task has finished
-
             WritableArray ret = Arguments.createArray();
 
             Boolean resolved = false;
             for (IEsptouchResult resultInList : result) {
               if(!resultInList.isCancelled() &&resultInList.getBssid() != null) {
-                WritableMap map = Arguments.createMap();
-                map.putString("bssid", resultInList.getBssid());
-                map.putString("ipv4", resultInList.getInetAddress().getHostAddress());
-                ret.pushMap(map);
+                ret.pushString(resultInList.getBssid());
+                ret.pushString(resultInList.getInetAddress().getHostAddress());
+                      // ret.pushMap(map);
+
                 resolved = true;
                 if (!resultInList.isSuc())
                   break;
 
-              }
             }
+          }
 
             if(resolved) {
-              Log.d(TAG, "Success run smartconfig");
+              ThiefUtil.sendEvent("Success run smartconfig");
               promise.resolve(ret);
             } else {
-              Log.d(TAG, "Error run smartconfig");
+              ThiefUtil.sendEvent("Error run smartconfig");
               promise.reject("new IllegalViewOperationException()");
             }
-
-        }
+      }
       }).execute(ssid, new String(""), pass, "YES", "1");
-      //promise.resolve(encoded);
-      //promise.reject("Error creating media file.");
-      //
-      //Toast.makeText(getReactApplicationContext(), ssid + ":" + pass, 10).show();
+    }
+    catch(Throwable e){
+      ThiefUtil.sendEvent(e.getMessage());
+    }
     }
 
 
@@ -131,12 +130,13 @@ public class RCTSmartconfigModule extends ReactContextBaseJavaModule {
 
       @Override
       protected void onPreExecute() {
-        Log.d(TAG, "Begin task");
+        ThiefUtil.sendEvent("Begin task");
       }
       @Override
       protected List<IEsptouchResult> doInBackground(String... params) {
-        Log.d(TAG, "doing task");
+        ThiefUtil.sendEvent("doing task");
         int taskResultCount = -1;
+      try{
         synchronized (mLock) {
           String apSsid = params[0];
           String apBssid =  params[1];
@@ -156,10 +156,15 @@ public class RCTSmartconfigModule extends ReactContextBaseJavaModule {
         List<IEsptouchResult> resultList = mEsptouchTask.executeForResults(taskResultCount);
         return resultList;
       }
+      catch(Throwable e){
+        ThiefUtil.sendEvent(e.getMessage());
+      }
+        return null;
+      }
 
       @Override
       protected void onPostExecute(List<IEsptouchResult> result) {
-
+      try{
         IEsptouchResult firstResult = result.get(0);
         // check whether the task is cancelled and no results received
         if (!firstResult.isCancelled()) {
@@ -169,6 +174,10 @@ public class RCTSmartconfigModule extends ReactContextBaseJavaModule {
            this.taskListener.onFinished(result);
          }
         }
+      }
+      catch(Throwable e){
+        ThiefUtil.sendEvent(e.getMessage());
+      }
       }
     }
 }

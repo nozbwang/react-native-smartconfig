@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.util.Log;
+import com.tuanpm.RCTSmartconfig.ThiefUtil;
 
 public class UDPSocketServer {
 
@@ -57,10 +57,10 @@ public class UDPSocketServer {
 			WifiManager manager = (WifiManager) mContext
 					.getSystemService(Context.WIFI_SERVICE);
 			mLock = manager.createMulticastLock("test wifi");
-			Log.d(TAG, "mServerSocket is created, socket read timeout: "
+			ThiefUtil.sendEvent(TAG, "mServerSocket is created, socket read timeout: "
 					+ socketTimeout + ", port: " + port);
 		} catch (IOException e) {
-			Log.e(TAG, "IOException");
+			ThiefUtil.sendEvent(TAG, "IOException");
 			e.printStackTrace();
 		}
 	}
@@ -88,11 +88,11 @@ public class UDPSocketServer {
 	 * @return
 	 */
 	public byte receiveOneByte() {
-		Log.d(TAG, "receiveOneByte() entrance");
+		ThiefUtil.sendEvent(TAG, "receiveOneByte() entrance");
 		try {
 			acquireLock();
 			mServerSocket.receive(mReceivePacket);
-			Log.d(TAG, "receive: " + (0 + mReceivePacket.getData()[0]));
+			ThiefUtil.sendEvent(TAG, "receive: " + (0 + mReceivePacket.getData()[0]));
 			return mReceivePacket.getData()[0];
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -107,18 +107,18 @@ public class UDPSocketServer {
 	 * @return
 	 */
 	public byte[] receiveSpecLenBytes(int len) {
-		Log.d(TAG, "receiveSpecLenBytes() entrance: len = " + len);
+		ThiefUtil.sendEvent(TAG, "receiveSpecLenBytes() entrance: len = " + len);
 		try {
 			acquireLock();
 			mServerSocket.receive(mReceivePacket);
 			byte[] recDatas = Arrays.copyOf(mReceivePacket.getData(), mReceivePacket.getLength());
-			Log.d(TAG, "received len : " + recDatas.length);
+			ThiefUtil.sendEvent(TAG, "received len : " + recDatas.length);
 			for (int i = 0; i < recDatas.length; i++) {
-				Log.e(TAG, "recDatas[" + i + "]:" + recDatas[i]);
+				ThiefUtil.sendEvent(TAG, "recDatas[" + i + "]:" + recDatas[i]);
 			}
-			Log.e(TAG, "receiveSpecLenBytes: " + new String(recDatas));
+			ThiefUtil.sendEvent(TAG, "receiveSpecLenBytes: " + new String(recDatas));
 			if (recDatas.length != len) {
-				Log.w(TAG,
+				ThiefUtil.sendEvent(TAG,
 						"received len is different from specific len, return null");
 				return null;
 			}
@@ -130,13 +130,13 @@ public class UDPSocketServer {
 	}
 
 	public void interrupt() {
-		Log.i(TAG, "USPSocketServer is interrupt");
+		ThiefUtil.sendEvent(TAG, "USPSocketServer is interrupt");
 		close();
 	}
 
 	public synchronized void close() {
 		if (!this.mIsClosed) {
-			Log.e(TAG, "mServerSocket is closed");
+			ThiefUtil.sendEvent(TAG, "mServerSocket is closed");
 			mServerSocket.close();
 			releaseLock();
 			this.mIsClosed = true;

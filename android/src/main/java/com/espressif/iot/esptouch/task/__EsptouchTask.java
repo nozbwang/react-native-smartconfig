@@ -19,7 +19,7 @@ import com.espressif.iot.esptouch.util.EspNetUtil;
 import android.content.Context;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
+import com.tuanpm.RCTSmartconfig.ThiefUtil;
 
 public class __EsptouchTask implements __IEsptouchTask {
 
@@ -81,14 +81,14 @@ public class __EsptouchTask implements __IEsptouchTask {
 			}
 			++count;
 			if (__IEsptouchTask.DEBUG) {
-				Log.d(TAG, "__putEsptouchResult(): count = " + count);
+				ThiefUtil.sendEvent(TAG, "__putEsptouchResult(): count = " + count);
 			}
 			mBssidTaskSucCountMap.put(bssid, count);
 			isTaskSucCountEnough = count >= mParameter
 					.getThresholdSucBroadcastCount();
 			if (!isTaskSucCountEnough) {
 				if (__IEsptouchTask.DEBUG) {
-					Log.d(TAG, "__putEsptouchResult(): count = " + count
+					ThiefUtil.sendEvent(TAG, "__putEsptouchResult(): count = " + count
 							+ ", isn't enough");
 				}
 				return;
@@ -104,7 +104,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 			// only add the result who isn't in the mEsptouchResultList
 			if (!isExist) {
 				if (__IEsptouchTask.DEBUG) {
-					Log.d(TAG, "__putEsptouchResult(): put one more result");
+					ThiefUtil.sendEvent(TAG, "__putEsptouchResult(): put one more result");
 				}
 				final IEsptouchResult esptouchResult = new EsptouchResult(isSuc,
 						bssid, inetAddress);
@@ -124,7 +124,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 				esptouchResultFail.setIsCancelled(mIsCancelled.get());
 				mEsptouchResultList.add(esptouchResultFail);
 			}
-			
+
 			return mEsptouchResultList;
 		}
 	}
@@ -142,7 +142,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 	@Override
 	public void interrupt() {
 		if (__IEsptouchTask.DEBUG) {
-			Log.d(TAG, "interrupt()");
+			ThiefUtil.sendEvent(TAG, "interrupt()");
 		}
 		mIsCancelled.set(true);
 		__interrupt();
@@ -151,15 +151,17 @@ public class __EsptouchTask implements __IEsptouchTask {
 	private void __listenAsyn(final int expectDataLen) {
 		new Thread() {
 			public void run() {
+
+			try{
 				if (__IEsptouchTask.DEBUG) {
-					Log.d(TAG, "__listenAsyn() start");
+					ThiefUtil.sendEvent(TAG, "__listenAsyn() start");
 				}
 				long startTimestamp = System.currentTimeMillis();
 				byte[] apSsidAndPassword = ByteUtil.getBytesByString(mApSsid
 						+ mApPassword);
 				byte expectOneByte = (byte) (apSsidAndPassword.length + 9);
 				if (__IEsptouchTask.DEBUG) {
-					Log.i(TAG, "expectOneByte: " + (0 + expectOneByte));
+					ThiefUtil.sendEvent(TAG, "expectOneByte: " + (0 + expectOneByte));
 				}
 				byte receiveOneByte = -1;
 				byte[] receiveBytes = null;
@@ -174,7 +176,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 					}
 					if (receiveOneByte == expectOneByte) {
 						if (__IEsptouchTask.DEBUG) {
-							Log.i(TAG, "receive correct broadcast");
+							ThiefUtil.sendEvent(TAG, "receive correct broadcast");
 						}
 						// change the socket's timeout
 						long consume = System.currentTimeMillis()
@@ -183,17 +185,17 @@ public class __EsptouchTask implements __IEsptouchTask {
 								.getWaitUdpTotalMillisecond() - consume);
 						if (timeout < 0) {
 							if (__IEsptouchTask.DEBUG) {
-								Log.i(TAG, "esptouch timeout");
+								ThiefUtil.sendEvent(TAG, "esptouch timeout");
 							}
 							break;
 						} else {
 							if (__IEsptouchTask.DEBUG) {
-								Log.i(TAG, "mSocketServer's new timeout is "
+								ThiefUtil.sendEvent(TAG, "mSocketServer's new timeout is "
 										+ timeout + " milliseconds");
 							}
 							mSocketServer.setSoTimeout(timeout);
 							if (__IEsptouchTask.DEBUG) {
-								Log.i(TAG, "receive correct broadcast");
+								ThiefUtil.sendEvent(TAG, "receive correct broadcast");
 							}
 							if (receiveBytes != null) {
 								String bssid = ByteUtil.parseBssid(
@@ -211,7 +213,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 						}
 					} else {
 						if (__IEsptouchTask.DEBUG) {
-							Log.i(TAG, "receive rubbish message, just ignore");
+							ThiefUtil.sendEvent(TAG, "receive rubbish message, just ignore");
 						}
 					}
 				}
@@ -219,9 +221,13 @@ public class __EsptouchTask implements __IEsptouchTask {
 						.getExpectTaskResultCount();
 				__EsptouchTask.this.__interrupt();
 				if (__IEsptouchTask.DEBUG) {
-					Log.d(TAG, "__listenAsyn() finish");
+					ThiefUtil.sendEvent(TAG, "__listenAsyn() finish");
 				}
 			}
+			catch(Throwable e){
+				ThiefUtil.sendEvent(e.getMessage());
+			}
+		 }
 		}.start();
 	}
 
@@ -238,7 +244,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 		while (!mIsInterrupt) {
 			if (currentTime - lastTime >= mParameter.getTimeoutTotalCodeMillisecond()) {
 				if (__IEsptouchTask.DEBUG) {
-					Log.d(TAG, "send gc code ");
+					ThiefUtil.sendEvent(TAG, "send gc code ");
 				}
 				// send guide code
 				while (!mIsInterrupt
@@ -298,7 +304,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 		mParameter.setExpectTaskResultCount(expectTaskResultCount);
 
 		if (__IEsptouchTask.DEBUG) {
-			Log.d(TAG, "execute()");
+			ThiefUtil.sendEvent(TAG, "execute()");
 		}
 		if (Looper.myLooper() == Looper.getMainLooper()) {
 			throw new RuntimeException(
@@ -306,7 +312,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 		}
 		InetAddress localInetAddress = EspNetUtil.getLocalInetAddress(mContext);
 		if (__IEsptouchTask.DEBUG) {
-			Log.i(TAG, "localInetAddress: " + localInetAddress);
+			ThiefUtil.sendEvent(TAG, "localInetAddress: " + localInetAddress);
 		}
 		// generator the esptouch byte[][] to be transformed, which will cost
 		// some time(maybe a bit much)
@@ -337,7 +343,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 			}
 			this.__interrupt();
 		}
-		
+
 		return __getEsptouchResultList();
 	}
 

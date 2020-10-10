@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 
 import com.espressif.iot.esptouch.task.__IEsptouchTask;
 
-import android.util.Log;
+import com.tuanpm.RCTSmartconfig.ThiefUtil;
 
 /**
  * this class is used to help send UDP data according to length
@@ -31,7 +31,7 @@ public class UDPSocketClient {
 			this.mIsClosed = false;
 		} catch (SocketException e) {
 			if (__IEsptouchTask.DEBUG) {
-				Log.e(TAG, "SocketException");
+				ThiefUtil.sendEvent(TAG, "SocketException");
 			}
 			e.printStackTrace();
 		}
@@ -45,7 +45,7 @@ public class UDPSocketClient {
 
 	public void interrupt() {
 		if (__IEsptouchTask.DEBUG) {
-			Log.i(TAG, "USPSocketClient is interrupt");
+			ThiefUtil.sendEvent(TAG, "USPSocketClient is interrupt");
 		}
 		this.mIsStop = true;
 	}
@@ -98,7 +98,7 @@ public class UDPSocketClient {
 			String targetHostName, int targetPort, long interval) {
 		if ((data == null) || (data.length <= 0)) {
 			if (__IEsptouchTask.DEBUG) {
-				Log.e(TAG, "sendData(): data == null or length <= 0");
+				ThiefUtil.sendEvent(TAG, "sendData(): data == null or length <= 0");
 			}
 			return;
 		}
@@ -107,21 +107,21 @@ public class UDPSocketClient {
 				continue;
 			}
 			try {
-				// Log.i(TAG, "data[" + i + " +].length = " + data[i].length);
+				// ThiefUtil.sendEvent(TAG, "data[" + i + " +].length = " + data[i].length);
 				DatagramPacket localDatagramPacket = new DatagramPacket(
 						data[i], data[i].length,
 						InetAddress.getByName(targetHostName), targetPort);
 				this.mSocket.send(localDatagramPacket);
 			} catch (UnknownHostException e) {
 				if (__IEsptouchTask.DEBUG) {
-					Log.e(TAG, "sendData(): UnknownHostException");
+					ThiefUtil.sendEvent(TAG, "sendData(): UnknownHostException");
 				}
 				e.printStackTrace();
 				mIsStop = true;
 				break;
 			} catch (IOException e) {
 				if (__IEsptouchTask.DEBUG) {
-					Log.e(TAG, "sendData(): IOException, but just ignore it");
+					ThiefUtil.sendEvent(TAG, "sendData(): IOException, but just ignore it");
 				}
 				// for the Ap will make some troubles when the phone send too many UDP packets,
 	            // but we don't expect the UDP packet received by others, so just ignore it
@@ -131,7 +131,7 @@ public class UDPSocketClient {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				if (__IEsptouchTask.DEBUG) {
-					Log.e(TAG, "sendData is Interrupted");
+					ThiefUtil.sendEvent(TAG, "sendData is Interrupted");
 				}
 				mIsStop = true;
 				break;

@@ -1,7 +1,7 @@
 package com.espressif.iot.esptouch;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.ArrayList; 
 
 import android.content.Context;
 
@@ -17,7 +17,7 @@ public class EsptouchTask implements IEsptouchTask {
 
 	/**
 	 * Constructor of EsptouchTask
-	 * 
+	 *
 	 * @param apSsid
 	 *            the Ap's ssid
 	 * @param apBssid
@@ -38,7 +38,7 @@ public class EsptouchTask implements IEsptouchTask {
 
 	/**
 	 * Constructor of EsptouchTask
-	 * 
+	 *
 	 * @param apSsid
 	 *            the Ap's ssid
 	 * @param apBssid
