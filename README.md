@@ -1,9 +1,7 @@
 
 ## 升级RN后，使用react-native-smartconfig遇到了很多问题，所以决定fork进行修改
 
-### 1. No interface method pushMap(Lcom/facebook/react/bridge/WritableMap;)V in class Lcom/facebook/react/bridge/WritableArray; or its super classes (declaration of 'com.fa
-cebook.react.bridge.WritableArray' appears in /data/app/com.example-K7SKRFpCkWFuGIH_USeqlA==/base.apk)","type":"nativelo
-g"}
+### 1. No interface method pushMap(Lcom/facebook/react/bridge/WritableMap;)V in class Lcom/facebook/react/bridge/WritableArray; or its super classes (declaration of 'com.facebook.react.bridge.WritableArray' appears in /data/app/com.example-K7SKRFpCkWFuGIH_USeqlA==/base.apk)
 
 因为高版本的RN修改了WritableArray的接口。
 导致RCTSmartconfigModule.start()方法中WritableArray.pushMap(WritableMap)报错。
