@@ -1,6 +1,6 @@
 {
-  "name": "react-native-smartconfig-esp",
-  "version": "0.2.2",
+  "name": "react-native-smartconfig-iot",
+  "version": "0.2.3",
   "description": "react-native ESP8266 smartconfig module",
   "nativePackage": true,
   "scripts": {

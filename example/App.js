@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, DeviceEventEmitter,Button} from 'react-native';
-import Smartconfig from 'react-native-smartconfig-esp';
+import Smartconfig from 'react-native-smartconfig-iot';
 
 const eventHandler = (message) => {
     console.log(new Date().toTimeString() + ':' + JSON.stringify(message));

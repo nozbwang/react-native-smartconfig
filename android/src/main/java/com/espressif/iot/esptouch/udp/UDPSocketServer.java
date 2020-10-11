@@ -38,7 +38,7 @@ public class UDPSocketServer {
 
 	/**
 	 * Constructor of UDP Socket Server
-	 * 
+	 *
 	 * @param port
 	 *            the Socket Server port
 	 * @param socketTimeout
@@ -67,7 +67,7 @@ public class UDPSocketServer {
 
 	/**
 	 * Set the socket timeout in milliseconds
-	 * 
+	 *
 	 * @param timeout
 	 *            the timeout in milliseconds or 0 for no timeout.
 	 * @return true whether the timeout is set suc
@@ -84,7 +84,7 @@ public class UDPSocketServer {
 
 	/**
 	 * Receive one byte from the port and convert it into String
-	 * 
+	 *
 	 * @return
 	 */
 	public byte receiveOneByte() {
@@ -99,7 +99,7 @@ public class UDPSocketServer {
 		}
 		return Byte.MIN_VALUE;
 	}
-	
+
 	/**
 	 * Receive specific length bytes from the port and convert it into String
 	 * 21,24,-2,52,-102,-93,-60
@@ -137,7 +137,9 @@ public class UDPSocketServer {
 	public synchronized void close() {
 		if (!this.mIsClosed) {
 			ThiefUtil.sendEvent(TAG, "mServerSocket is closed");
-			mServerSocket.close();
+			if(mServerSocket != null){
+				mServerSocket.close();
+			}
 			releaseLock();
 			this.mIsClosed = true;
 		}
