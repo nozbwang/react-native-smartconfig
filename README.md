@@ -1,103 +1,40 @@
-
-## 升级RN后，使用react-native-smartconfig遇到了很多问题，所以决定fork进行修改
-
-### 1. No interface method pushMap(Lcom/facebook/react/bridge/WritableMap;)V in class Lcom/facebook/react/bridge/WritableArray; or its super classes (declaration of 'com.facebook.react.bridge.WritableArray' appears in /data/app/com.example-K7SKRFpCkWFuGIH_USeqlA==/base.apk)
-
-因为高版本的RN修改了WritableArray的接口。
-导致RCTSmartconfigModule.start()方法中WritableArray.pushMap(WritableMap)报错。
-
-### 2. 多次调用Smartconfig.start方法后，APP闪退。 
-
-因为__EsptouchTask.__listenAsyn方法会启动一个线程，线程里的方法会报错，导致闪退。给线程里的方法加上异常保护就可以了。
-
-### 3. 本地调试RN插件，看不到日志。
-
-因为我是直接使用命令行启动的RN应用，IDE使用的是ATOM，所以看不到logcat的日志。所以直接采用Android原生代码向JS发送消息，在JS模块中进行日志打印。
-
-
-## 添加了example
-
-1.运行 (需首先切换当前目录为example目录)： 
-
-```bash
-yarn && yarn android
-```
-
-2.如果你正在尝试修改react-native-smartconfig-esp的内容，可以在example目录下使用以下命令使其实时生效
-
-```bash
-rm -rf node_modules\react-native-smartconfig-esp8266\ && yarn --force && yarn android
-```
-
 ## Description
 
 [react-native](https://github.com/facebook/react-native) module for [ESP8266 ESPTOUCH Smart config](https://github.com/EspressifApp)
 
-## Featues
+- Forked from [tuanpmt/react-native-smartconfig](https://github.com/tuanpmt/react-native-smartconfig).
+
+- Improvements are made to increase its stablity and become compatible with higher versions of react-native (e.g. 6.3.1)
+
+- Example app is provided if you want to test or improve this repo again.
+
+## Features
 * Support both IOS and Android
 * React Native Promise support
 * Fast way to do configure wifi network for IOT device
+* Log can be sent to js module
 
 ## Getting started
-### Mostly automatic install
-1. `npm install rnpm --global`
-2. `npm install react-native-smartconfig@latest --save`
-3. `rnpm link react-native-smartconfig`
+### Mostly automatic install (RN >= 0.60 )
+1.  yarn add react-native-smartconfig-iot
+2.  yarn android or yarn ios
 
-### Manual install
-#### iOS
-- `npm install react-native-smartconfig@latest --save`
--  In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-- Go to `node_modules` ➜ `react-native-smartconfig` and add `RCTSmartconfig.xcodeproj`
-- In XCode, in the project navigator, select your project. Add `libRCTSmartconfig.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-- Click `RCTSmartconfig.xcodeproj` in the project navigator and go the `Build Settings` tab. Make sure 'All' is toggled on (instead of 'Basic'). In the `Search Paths` section, look for `Header Search Paths` and make sure it contains both `$(SRCROOT)/../../react-native/React` - mark  as `recursive`.
-- Run your project (`Cmd+R`)
+### Manually install
+please refer to [this part](https://github.com/tuanpmt/react-native-smartconfig#manual-install)
 
+### Test this repo locally
+```bash
+cd example
+yarn && yarn android
 
-#### Android
-
--  `npm install react-native-smartconfig@latest --save`
--  For older version.  Modify the ReactInstanceManager.builder() calls chain in `android/app/main/java/.../MainActivity.java` to include:
-
-```javascript
-import com.tuanpm.RCTSmartconfig; // import for older version
-
-.addPackage(new RCTSmartconfigPackage()) //for older version
+// if you want to update this repo and retest, execute the following command after every change
+rm -rf node_modules\react-native-smartconfig-iot && yarn --force && yarn android
 ```
--  For newest version.  Modify the ReactInstanceManager.builder() calls chain in `android/app/main/java/.../MainApplication.java` to include:
-```javascript
-import com.tuanpm.RCTSmartconfig.RCTSmartconfigPackage; // import for newest version of react-native
-
-new RCTSmartconfigPackage()           // for newest version of react-native
-```
-
--  Append the following lines to `android/settings.gradle` before `include ':app'`:
-
-```
-include ':react-native-smartconfig'
-project(':react-native-smartconfig').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-smartconfig/android')
-```
-
-- Insert the following lines inside the dependencies block in `android/app/build.gradle`, dont missing `apply plugin:'java'` on top:
-
-```
-compile project(':react-native-smartconfig')
-```
-
-Notes:
-
-```
-dependencies {
-  compile project(':react-native-smartconfig')
-}
-```
-
-
 
 ## Usage
 
 ```javascript
-import Smartconfig from 'react-native-smartconfig';
+import Smartconfig from 'react-native-smartconfig-iot';
 
 Smartconfig.start({
   type: 'esptouch', //or airkiss, now doesn't not effect
