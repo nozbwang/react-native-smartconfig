@@ -24,7 +24,14 @@ please refer to [this part](https://github.com/tuanpmt/react-native-smartconfig#
 
 ### Test this repo locally
 ```bash
-cd example
+// move example to the same folder level of react-native-smartconfig-iot
++-- example
++-- react-native-smartconfig-iot
+|   +-- android
+|   +-- ios
+
+//
+cd ../example
 yarn && yarn android
 
 // if you want to update this repo and retest, execute the following command after every change
