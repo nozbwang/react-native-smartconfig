@@ -30,7 +30,6 @@ please refer to [this part](https://github.com/tuanpmt/react-native-smartconfig#
 |   +-- android
 |   +-- ios
 
-//
 cd ../example
 yarn && yarn android
 
