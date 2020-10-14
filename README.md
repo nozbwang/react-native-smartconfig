@@ -4,7 +4,7 @@
 
 - Forked from [tuanpmt/react-native-smartconfig](https://github.com/tuanpmt/react-native-smartconfig).
 
-- Improvements are made to increase its stablity and become compatible with higher versions of react-native (e.g. 6.3.1)
+- Improvements are made to increase its stablity and become compatible with higher versions of react-native (e.g. 0.63.2)
 
 - Example app is provided if you want to test or improve this repo again.
 
@@ -15,12 +15,19 @@
 * Log can be sent to js module
 
 ## Getting started
-### Mostly automatic install (RN >= 0.60 )
-1.  yarn add react-native-smartconfig-iot
-2.  yarn android or yarn ios
+### automatic install (RN >= 0.60 )
 
-### Manually install
-please refer to [this part](https://github.com/tuanpmt/react-native-smartconfig#manual-install)
+For Android
+```bash
+1.  yarn add react-native-smartconfig-iot
+2.  yarn android
+```
+
+For Android
+```bash
+1.  yarn add react-native-smartconfig-iot
+2.  cd ios && pod install && cd .. && yarn ios
+```
 
 ### Test this repo locally
 ```bash
